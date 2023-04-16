@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@layer components {
+  .navbar {
+    @apply flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-red-500 text-sm py-4;
+  }
+  .buttom-primary {
+    @apply py-2 px-4 border border-black font-medium text-black bg-white hover:bg-red-600 hover:text-white;
+  }
+  .navbar-text {
+    @apply font-medium text-white hover:text-gray-400;
+  }
+  .logo {
+    @apply flex-none text-xl font-semibold dark:text-white;
+  }
+}
+/*
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+*/
