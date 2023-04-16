@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import router, { useRouter } from 'next/router'
 import CardArticle from '@/components/CardArticleComponent'
 
 export type ArticleData = {
@@ -14,7 +13,6 @@ export type ArticleData = {
 const apiURL = "http://localhost:5000/api/articles";
 
 const index = () => {
-  const router = useRouter();
   const [articles, setArticle] = useState<ArticleData[] | null>()
 
   useEffect(() => {
@@ -38,7 +36,7 @@ const index = () => {
       ) : (
 
         <div>
-          No-article
+          No-article in database
         </div>
       )}
         
