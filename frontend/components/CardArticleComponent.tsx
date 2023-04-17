@@ -13,9 +13,9 @@ const CardArticleComponent = (props: any) => {
     
     return (
         <div onClick={() => {
-            router.push("/article/" + article._id)
+            router.push("/Article/" + article._id)
         }}>
-            <div className="sm:items-center m-3 flex flex-col justify-center bg-white border shadow-md rounded-xl p-4 md:p-5 hover:shadow-2xl hover:text-red-400">
+            <div className="max-w-[120rem] w-full mx-auto sm:items-center m-3 flex flex-col justify-center bg-white border shadow-md rounded-xl p-4 md:p-5 hover:shadow-2xl hover:text-red-400">
                 <h1 className='font-bold text-2xl'>{article.title}</h1>
                 <div className='flex flex-row justify-center'>
                     <img className='rounded-full w-6 h-6 m-1' src={article?.user_img} alt="u_img"/>
