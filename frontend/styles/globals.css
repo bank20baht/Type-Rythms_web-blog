@@ -27,6 +27,15 @@
   .contaniner {
     @apply max-w-[120rem] w-full mx-auto;
   }
+  .input-title {
+    @apply max-w-[120rem] w-full mx-auto m-3 py-3 px-4 block border border-black rounded-md text-sm focus:border-blue-500 focus:ring-blue-500;
+  }
+  .textarea-content {
+    @apply m-3 py-3 px-4 block max-w-[120rem] w-full mx-auto border border-black rounded-md text-sm focus:border-blue-500 focus:ring-blue-500;
+  }
+  .avatar-img {
+    @apply rounded-full w-6 h-6 m-1;
+  }
 }
 /*
 @media (prefers-color-scheme: dark) {

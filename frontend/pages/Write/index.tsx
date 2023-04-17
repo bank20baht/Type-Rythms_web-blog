@@ -18,7 +18,7 @@ const index = () => {
     setArticleData({ ...articleData, [e.target.name]: e.target.value });
   };
 
-  console.log(articleData);
+  //console.log(articleData);
   function postArticle() {
     axios
       .post(apiURL, {
@@ -35,16 +35,16 @@ const index = () => {
     router.push("/");
   }
   return (
-    <div className="content-center flex flex-col justify-center ">
+    <div className="content-center flex flex-col justify-center md:p-5">
       <input
         type="text"
-        className="max-w-[120rem] w-full mx-auto m-3 py-3 px-4 block border border-black rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 "
+        className="input-title"
         name="title"
         placeholder="Title"
         onChange={handleChange}
       ></input>
       <textarea
-        className="m-3 py-3 px-4 block max-w-[120rem] w-full mx-auto border border-black rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
+        className="textarea-content"
         rows={20}
         name="content"
         placeholder="Content"

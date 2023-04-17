@@ -23,7 +23,7 @@ const Article = () => {
       try {
         const response = await axios.get(apiURL + id);
         setArticle(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -41,7 +41,7 @@ const Article = () => {
   };
 
   return (
-    <div className="max-w-[120rem] w-full mx-auto">
+    <div className="contaniner">
       <div className="sm:items-center m-3 flex flex-col justify-center bg-white border shadow-md rounded-xl p-4 md:p-5">
         <h1>{article?.title}</h1>
       </div>
@@ -50,7 +50,7 @@ const Article = () => {
       </div>
       <div className="flex flex-row justify-end p-2 m-2">
         <img
-          className="rounded-full w-6 h-6 m-1"
+          className="avatar-img"
           src={article?.user_img}
           alt="u_img"
         />
