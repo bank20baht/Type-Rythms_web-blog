@@ -12,20 +12,7 @@ export type ArticleData = {
 
 const apiURL = "http://localhost:5000/api/articles";
 
-const index = () => {
-  const [articles, setArticle] = useState<ArticleData[] | null>()
-
-  useEffect(() => {
-    const getArticle =async () => {
-      try {
-        const response = await axios.get(apiURL)
-        setArticle(response.data)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    getArticle();
-  }, [])
+const index = ({ articles }: { articles: ArticleData[] }) => {
   return (
     <div>
       {articles && articles.length > 0 ? (
@@ -34,15 +21,28 @@ const index = () => {
           .reverse()
           .map((article) => <CardArticle article={article} key={article._id} />)
       ) : (
-
-        <div>
-          No-article in database
-        </div>
+        <div>No articles found.</div>
       )}
-        
     </div>
-    
-  )
-}
+  );
+};
+
+export const getServerSideProps = async (context: any) => {
+  const { id } = context.query;
+  let articles = null;
+
+  try {
+    const response = await axios.get(apiURL);
+    articles = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+
+  return {
+    props: {
+      articles,
+    },
+  };
+};
 
 export default index
