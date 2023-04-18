@@ -15,7 +15,7 @@ const NavbarComponent = () => {
           <>
             <a className="buttom-secondary" href="/Write">Write</a>
             <a className="buttom-primary" onClick={() => {
-              router.push("/MyStory/NATTAPONG PROMTHONG");
+              router.push("/User/NATTAPONG PROMTHONG");
             }}>{user}</a>
             
           </>
