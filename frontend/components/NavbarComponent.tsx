@@ -1,8 +1,10 @@
+import { useRouter } from "next/router";
 import React from "react";
 
 const NavbarComponent = () => {
   const islogin = true;
   const user = "Bank20baht"
+  const router = useRouter();
   return (
     <header className="navbar">
     <nav className="max-w-[120rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between" aria-label="Global">
@@ -12,7 +14,9 @@ const NavbarComponent = () => {
         { islogin ?
           <>
             <a className="buttom-secondary" href="/Write">Write</a>
-            <a className="buttom-primary" href="/Account">{user}</a>
+            <a className="buttom-primary" onClick={() => {
+              router.push("/MyStory/NATTAPONG PROMTHONG");
+            }}>{user}</a>
             
           </>
         :
