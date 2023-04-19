@@ -49,12 +49,21 @@ const Article = () => {
         <p>{article?.content}</p>
       </div>
       <div className="flex flex-row justify-end p-2 m-2">
-        <img
-          className="avatar-img"
-          src={article?.user_img}
-          alt="u_img"
-        />
+        <img className="avatar-img" src={article?.user_img} alt="u_img" />
         <h2 className="m-1">{article?.user_name}</h2>
+      </div>
+      <div className="contaniner ">
+        <div className="buttom-primary" onClick={deleteArticle}>
+          DEL
+        </div>
+        <div
+          className="buttom-secondary"
+          onClick={() => {
+            router.push("/Edit/" + article?._id);
+          }}
+        >
+          EDIT
+        </div>
       </div>
     </div>
   );
