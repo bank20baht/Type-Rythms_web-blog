@@ -28,7 +28,6 @@ const index = ({ articles }: { articles: ArticleData[] }) => {
 };
 
 export const getServerSideProps = async (context: any) => {
-  const { id } = context.query;
   let articles = null;
 
   try {

@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const apiURL = "http://localhost:5000/api/article/";
 
@@ -13,17 +14,19 @@ type Props = {
 
 const Edit = ({ articleData }: Props) => {
   const [article, setArticle] = useState(articleData);
-
+  const router = useRouter();
+  const { id } = router.query;
   const handleChange = (e: any) => {
     setArticle({ ...article, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+
     try {
       const response = await axios.put(
         "http://localhost:5000/api/update/article",
         {
+          _id: id,
           title: article.title,
           content: article.content,
           user_email: "bank_update",
@@ -31,7 +34,9 @@ const Edit = ({ articleData }: Props) => {
           user_img: "bank_update",
         }
       );
-      console.log(response.data);
+      setArticle(response.data)
+      window.location.href = "/";
+      //console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -56,7 +61,7 @@ const Edit = ({ articleData }: Props) => {
         onChange={handleChange}
       ></textarea>
       <div className="flex justify-end p-2 m-2 max-w-[120rem] w-full mx-auto">
-        <div className="buttom-primary" onClick={() => {}}>
+        <div className="buttom-primary" onClick={handleSubmit}>
           Update
         </div>
       </div>

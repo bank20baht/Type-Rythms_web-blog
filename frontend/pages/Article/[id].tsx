@@ -27,19 +27,22 @@ const Article = ({ article }: { article: ArticleData }) => {
       <div className="sm:items-center m-3 flex flex-col justify-center bg-white border shadow-md rounded-xl p-4 md:p-5">
         <h1>{article.title}</h1>
       </div>
-      <div className="sm:items-center m-3 flex flex-col justify-center bg-white border shadow-md rounded-xl p-4 md:p-5">
-        <p>{article.content}</p>
+      <div className="sm:items-center m-3 flex flex-col justify-center bg-white border shadow-md rounded-xl p-4 md:p-5" style={{
+        whiteSpace: "pre-wrap",
+        overflowWrap: "break-word"
+      }}>
+        {article.content}
       </div>
       <div className="flex flex-row justify-end p-2 m-2">
         <img className="avatar-img" src={article.user_img} alt="u_img" />
         <h2 className="m-1">{article.user_name}</h2>
       </div>
-      <div className="contaniner ">
-        <div className="buttom-primary" onClick={deleteArticle}>
+      <div className="flex flex-row justify-end">
+        <div className="buttom-primary w-auto" onClick={deleteArticle}>
           DEL
         </div>
         <div
-          className="buttom-secondary"
+          className="buttom-secondary w-auto"
           onClick={() => {
             router.push("/Edit/" + article._id);
           }}
