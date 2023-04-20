@@ -27,10 +27,7 @@ const Article = ({ article }: { article: ArticleData }) => {
       <div className="sm:items-center m-3 flex flex-col justify-center bg-white border shadow-md rounded-xl p-4 md:p-5">
         <h1>{article.title}</h1>
       </div>
-      <div className="sm:items-center m-3 flex flex-col justify-center bg-white border shadow-md rounded-xl p-4 md:p-5" style={{
-        whiteSpace: "pre-wrap",
-        overflowWrap: "break-word"
-      }}>
+      <div className="sm:items-center m-3 flex flex-col justify-center bg-white border shadow-md rounded-xl p-4 md:p-5 whitespace-pre-wrap overflow-wrap-break-word">
         {article.content}
       </div>
       <div className="flex flex-row justify-end p-2 m-2">
