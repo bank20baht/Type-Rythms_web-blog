@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import axios from 'axios'
 import CardArticle from '@/components/CardArticleComponent'
-
+import Head from 'next/head'
 export type ArticleData = {
   _id: string;
   title: string;
@@ -14,7 +14,13 @@ const apiURL = "http://localhost:5000/api/articles";
 
 const index = ({ articles }: { articles: ArticleData[] }) => {
   return (
-    <div>
+    <>
+      <Head>
+        <title>Type-Rythms Web blog</title>
+        <meta name="description" content="This is a description of my web page."></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+      </Head>
+      <div>
       {articles && articles.length > 0 ? (
         articles
           .slice(0)
@@ -24,6 +30,8 @@ const index = ({ articles }: { articles: ArticleData[] }) => {
         <div>No articles found.</div>
       )}
     </div>
+    </>
+    
   );
 };
 
