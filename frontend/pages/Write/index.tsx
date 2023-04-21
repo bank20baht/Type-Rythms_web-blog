@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-
+import Head from "next/head";
 const apiURL = "http://localhost:5000/api/addArticle";
 
 const index = () => {
@@ -35,6 +35,12 @@ const index = () => {
     router.push("/");
   }
   return (
+    <>
+      <Head>
+        <title>Write Article</title>
+        <meta name="description" content="This is a description of my web page."></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+      </Head>
     <div className="content-center flex flex-col justify-center md:p-5">
       <input
         type="text"
@@ -54,6 +60,8 @@ const index = () => {
         <div className="buttom-primary" onClick={postArticle}>Write</div>
       </div>
     </div>
+    </>
+
   );
 };
 

@@ -1,8 +1,7 @@
-
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-
+import Head from "next/head";
 const apiURL = "http://localhost:5000/api/article/";
 
 type Props = {
@@ -21,7 +20,6 @@ const Edit = ({ articleData }: Props) => {
   };
 
   const handleSubmit = async () => {
-
     try {
       const response = await axios.put(
         "http://localhost:5000/api/update/article",
@@ -34,7 +32,7 @@ const Edit = ({ articleData }: Props) => {
           user_img: "bank_update",
         }
       );
-      setArticle(response.data)
+      setArticle(response.data);
       window.location.href = "/";
       //console.log(response.data);
     } catch (error) {
@@ -43,29 +41,42 @@ const Edit = ({ articleData }: Props) => {
   };
 
   return (
-    <div className="content-center flex flex-col justify-center md:p-5">
-      <input
-        type="text"
-        className="input-title"
-        name="title"
-        placeholder="Title"
-        value={article.title}
-        onChange={handleChange}
-      ></input>
-      <textarea
-        className="textarea-content"
-        rows={20}
-        name="content"
-        placeholder="Content"
-        value={article.content}
-        onChange={handleChange}
-      ></textarea>
-      <div className="flex justify-end p-2 m-2 max-w-[120rem] w-full mx-auto">
-        <div className="buttom-primary" onClick={handleSubmit}>
-          Update
+    <>
+      <Head>
+        <title>Edit: {article.title}</title>
+        <meta
+          name="description"
+          content="This is a description of my web page."
+        ></meta>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0"
+        ></meta>
+      </Head>
+      <div className="content-center flex flex-col justify-center md:p-5">
+        <input
+          type="text"
+          className="input-title"
+          name="title"
+          placeholder="Title"
+          value={article.title}
+          onChange={handleChange}
+        ></input>
+        <textarea
+          className="textarea-content"
+          rows={20}
+          name="content"
+          placeholder="Content"
+          value={article.content}
+          onChange={handleChange}
+        ></textarea>
+        <div className="flex justify-end p-2 m-2 max-w-[120rem] w-full mx-auto">
+          <div className="buttom-primary" onClick={handleSubmit}>
+            Update
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

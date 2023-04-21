@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import CardArticle from '@/components/CardArticleComponent';
+import Head from 'next/head'
 
 type ArticleData = {
   _id: string;
@@ -15,6 +16,12 @@ const apiURL = "http://localhost:5000/api/user/";
 
 const MyStory = ({ articles }: { articles: ArticleData[] }) => {
   return (
+    <>
+      <Head>
+        <title>My Account</title>
+        <meta name="description" content="This is a description of my web page."></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+      </Head>
     <div>
       {articles && articles.length > 0 ? (
         articles
@@ -25,6 +32,8 @@ const MyStory = ({ articles }: { articles: ArticleData[] }) => {
         <div>No articles found.</div>
       )}
     </div>
+    </>
+
   );
 };
 
