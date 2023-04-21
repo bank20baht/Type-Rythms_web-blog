@@ -27,8 +27,14 @@ const Article = ({ article }: { article: ArticleData }) => {
       <Head>
         <title>{article.title}</title>
         <meta name="author" content={article.user_name}></meta>
-        <meta name="description" content="This is a description of my web page."></meta>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <meta
+          name="description"
+          content="This is a description of my web page."
+        ></meta>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0"
+        ></meta>
       </Head>
       <div className="contaniner">
         <div className="sm:items-center m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5">
