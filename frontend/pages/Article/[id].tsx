@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React from "react";
 import Head from "next/head";
+
 type ArticleData = {
   _id: string;
   title: string;

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 
 
 const CardArticleComponent = (props: any) => {
+
     const router = useRouter(); 
     const { article } = props;
     function getDate() {
@@ -10,7 +11,6 @@ const CardArticleComponent = (props: any) => {
         let date = new Date(time);
         return date.toDateString();
     }
-    
     return (
         <div onClick={() => {
             router.push("/Article/" + article._id)
