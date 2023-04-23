@@ -65,5 +65,38 @@ app.get('/api/data', (req, res) => {
     res.json(results);
   });
 
+  const { MongoClient } = require('mongodb');
+  
+
+  
+  app.get('/api/articles', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const client = new MongoClient('mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority')
+    try {
+      await client.connect();
+      console.log("DB Connected")
+      const articlesCollection = client.db('db-name').collection('articleData');
+  
+      const count = await articlesCollection.countDocuments();
+      const articles = await articlesCollection.find({})
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .toArray();
+  
+      res.status(200).json({
+        results: articles,
+        count: count,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page
+      });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server Error');
+    } finally {
+      await client.close();
+    }
+  });
 // Start the server
 app.listen(5000, () => console.log('Server started on port 5000'));
