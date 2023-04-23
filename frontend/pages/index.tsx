@@ -55,7 +55,7 @@ export const getServerSideProps = async (context: any) => {
 export default index 
 */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 interface Data {
@@ -63,7 +63,7 @@ interface Data {
   name: string;
 }
 
-function App(): JSX.Element {
+export default function Home(): JSX.Element {
   const [data, setData] = useState<Data[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number | null>(null);
@@ -77,6 +77,7 @@ function App(): JSX.Element {
     setData(response.data.results);
     console.log(response)
     setTotalPages(Math.ceil(response.data.count / 5));
+    console.log(totalPages)
   };
 
   const goToNextPage = () => {
@@ -96,20 +97,15 @@ function App(): JSX.Element {
           <p>ID: {item.id}</p>
         </div>
       ))}
-      <div>
-        <button className="buttom-primary" onClick={goToPreviousPage}>previos</button>
-        <button className="buttom-primary" onClick={goToNextPage}>next</button>
-      </div>
+        <p>Page {currentPage} of {totalPages}</p>
       <div>
         {currentPage > 1 && (
-          <button onClick={goToPreviousPage}>Previous</button>
+          <button className="buttom-primary" onClick={goToPreviousPage}>Previous</button>
         )}
         {currentPage < totalPages! && (
-          <button onClick={goToNextPage}>Next</button>
+          <button className="buttom-primary" onClick={goToNextPage}>Next</button>
         )}
       </div>
     </div>
   );
 }
-
-export default App;
