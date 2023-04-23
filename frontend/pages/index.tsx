@@ -1,4 +1,4 @@
-import React from 'react'
+/*import React from 'react'
 import axios from 'axios'
 import CardArticle from '@/components/CardArticleComponent'
 import Head from 'next/head'
@@ -52,4 +52,64 @@ export const getServerSideProps = async (context: any) => {
   };
 };
 
-export default index
+export default index 
+*/
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+interface Data {
+  id: number;
+  name: string;
+}
+
+function App(): JSX.Element {
+  const [data, setData] = useState<Data[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
+
+  const fetchData = async () => {
+    const response = await axios.get(`http://localhost:5000/api/data?page=${currentPage}&limit=5`);
+    setData(response.data.results);
+    console.log(response)
+    setTotalPages(Math.ceil(response.data.count / 5));
+  };
+
+  const goToNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const goToPreviousPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
+
+  return (
+    <div>
+      <h1>My Paginated Data</h1>
+      {data.map((item: Data) => (
+        <div key={item.id}>
+          <h2>{item.name}</h2>
+          <p>ID: {item.id}</p>
+        </div>
+      ))}
+      <div>
+        <button className="buttom-primary" onClick={goToPreviousPage}>previos</button>
+        <button className="buttom-primary" onClick={goToNextPage}>next</button>
+      </div>
+      <div>
+        {currentPage > 1 && (
+          <button onClick={goToPreviousPage}>Previous</button>
+        )}
+        {currentPage < totalPages! && (
+          <button onClick={goToNextPage}>Next</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default App;
