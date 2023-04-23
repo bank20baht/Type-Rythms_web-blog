@@ -55,62 +55,71 @@ export const getServerSideProps = async (context: any) => {
 export default index 
 */
 
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import CardArticle from '@/components/CardArticleComponent'
+import axios from "axios";
+import CardArticle from "@/components/CardArticleComponent";
+import { GetServerSideProps } from "next";
+
 interface Data {
   _id: string;
   title: string;
   user_name: string;
   user_img: string;
-  timestamp: string
+  timestamp: string;
 }
 
-export default function Home(): JSX.Element {
-  const [data, setData] = useState<Data[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number | null>(null);
+interface Props {
+  data: Data[];
+  currentPage: number;
+  totalPages: number;
+}
 
-  useEffect(() => {
-    fetchData();
-  }, [currentPage]);
-
-  const fetchData = async () => {
-    const response = await axios.get(`http://localhost:5000/api/articles?page=${currentPage}&limit=5`);
-    setData(response.data.results);
-    console.log(response)
-    setTotalPages(Math.ceil(response.data.count / 5));
-    console.log(totalPages)
-  };
-
+export default function Home({ data, currentPage, totalPages }: Props) {
   const goToNextPage = () => {
-    setCurrentPage(currentPage + 1);
+    window.location.href = `/?page=${currentPage + 1}`;
   };
 
   const goToPreviousPage = () => {
-    setCurrentPage(currentPage - 1);
+    window.location.href = `/?page=${currentPage - 1}`;
   };
 
   return (
-    <div className='contaniner'>
-      <>
-      
-      </>
+    <div className="contaniner">
+      <></>
       {data.map((item: Data) => (
-        <CardArticle article={item} key={item._id} />)
-      )}
-      <div className='flex justify-center'>
-        <p>Page {currentPage} of {totalPages}</p>
+        <CardArticle article={item} key={item._id} />
+      ))}
+      <div className="flex justify-center">
+        <p>
+          Page {currentPage} of {totalPages}
+        </p>
       </div>
-      <div className='flex justify-center'>
-        
+      <div className="flex justify-center">
         {currentPage > 1 && (
-          <button className="buttom-primary w-1/8" onClick={goToPreviousPage}>Previous</button>
+          <button className="buttom-primary w-1/8" onClick={goToPreviousPage}>
+            Previous
+          </button>
         )}
-        {currentPage < totalPages! && (
-          <button className="buttom-primary w-1/8" onClick={goToNextPage}>Next</button>
+        {currentPage < totalPages && (
+          <button className="buttom-primary w-1/8" onClick={goToNextPage}>
+            Next
+          </button>
         )}
       </div>
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  query,
+}) => {
+  const page = query.page ? Number(query.page) : 1;
+  const limit = 5;
+  const response = await axios.get(
+    `http://localhost:5000/api/articles?page=${page}&limit=${limit}`
+  );
+  const data = response.data.results;
+  console.log(data)
+  const totalPages = Math.ceil(response.data.count / limit);
+  return { props: { data, currentPage: page, totalPages } };
+};
+
