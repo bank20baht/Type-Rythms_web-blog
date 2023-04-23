@@ -57,10 +57,13 @@ export default index
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import CardArticle from '@/components/CardArticleComponent'
 interface Data {
-  id: number;
-  name: string;
+  _id: string;
+  title: string;
+  user_name: string;
+  user_img: string;
+  timestamp: string
 }
 
 export default function Home(): JSX.Element {
@@ -73,7 +76,7 @@ export default function Home(): JSX.Element {
   }, [currentPage]);
 
   const fetchData = async () => {
-    const response = await axios.get(`http://localhost:5000/api/data?page=${currentPage}&limit=5`);
+    const response = await axios.get(`http://localhost:5000/api/articles?page=${currentPage}&limit=5`);
     setData(response.data.results);
     console.log(response)
     setTotalPages(Math.ceil(response.data.count / 5));
@@ -89,21 +92,23 @@ export default function Home(): JSX.Element {
   };
 
   return (
-    <div>
-      <h1>My Paginated Data</h1>
+    <div className='contaniner'>
+      <>
+      
+      </>
       {data.map((item: Data) => (
-        <div key={item.id}>
-          <h2>{item.name}</h2>
-          <p>ID: {item.id}</p>
-        </div>
-      ))}
+        <CardArticle article={item} key={item._id} />)
+      )}
+      <div className='flex justify-center'>
         <p>Page {currentPage} of {totalPages}</p>
-      <div>
+      </div>
+      <div className='flex justify-center'>
+        
         {currentPage > 1 && (
-          <button className="buttom-primary" onClick={goToPreviousPage}>Previous</button>
+          <button className="buttom-primary w-1/8" onClick={goToPreviousPage}>Previous</button>
         )}
         {currentPage < totalPages! && (
-          <button className="buttom-primary" onClick={goToNextPage}>Next</button>
+          <button className="buttom-primary w-1/8" onClick={goToNextPage}>Next</button>
         )}
       </div>
     </div>
