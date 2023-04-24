@@ -1,27 +1,39 @@
-import React from "react";
 import axios from "axios";
 import CardArticle from "@/components/CardArticleComponent";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-type ArticleData = {
+export type ArticleData = {
   _id: string;
   title: string;
-  timestamp: string;
-  user_email: string;
   user_name: string;
   user_img: string;
-};
+  timestamp: string;
+  user_email: string
+}
 
-const apiURL = "http://localhost:5000/api/user/";
+interface Props {
+  articles: ArticleData[];
+  currentPage: number;
+  totalPages: number;
+}
 
-const MyStory = ({ articles }: { articles: ArticleData[] }) => {
+export default function User({ articles, currentPage, totalPages }: Props) {
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = router.query
+  const goToNextPage = () => {
+    window.location.href = `/?page=${currentPage + 1}`;
+  };
+
+  const goToPreviousPage = () => {
+    window.location.href = `/?page=${currentPage - 1}`;
+  };
+
   return (
-    <>
+    <div className="contaniner">
       <Head>
-        <title>{id}</title>
+        <title>Type-Rythms Web blog</title>
         <meta
           name="description"
           content="This is a description of my web page."
@@ -32,7 +44,7 @@ const MyStory = ({ articles }: { articles: ArticleData[] }) => {
         ></meta>
       </Head>
       <div>
-        <div className="max-w-[120rem] w-full mx-auto sm:items-center m-3 flex flex-col justify-center">
+      <div className="max-w-[120rem] w-full mx-auto sm:items-center m-3 flex flex-col justify-center">
           <img
             className="rounded-full w-20 h-20 m-1"
             src={articles[0].user_img}
@@ -45,33 +57,50 @@ const MyStory = ({ articles }: { articles: ArticleData[] }) => {
           articles
             .slice(0)
             .reverse()
-            .map((article) => (
-              <CardArticle article={article} key={article._id} />
-            ))
+            .map((article: any) => {
+              return <CardArticle article={article} key={article._id} />;
+            })
         ) : (
           <div>No articles found.</div>
         )}
       </div>
-    </>
+      <div className="flex justify-center">
+        <p>
+          Page {currentPage} of {totalPages}
+        </p>
+      </div>
+      <div className="flex justify-center">
+        {currentPage > 1 && (
+          <button className="buttom-primary w-1/8" onClick={goToPreviousPage}>
+            Previous
+          </button>
+        )}
+        {currentPage < totalPages && (
+          <button className="buttom-primary w-1/8" onClick={goToNextPage}>
+            Next
+          </button>
+        )}
+      </div>
+    </div>
   );
-};
+}
 
-export const getServerSideProps = async (context: any) => {
-  const { id } = context.query;
-  let articles = null;
-
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { id } = query
+  const page = query.page ? Number(query.page) : 1;
+  const limit = 5;
+  let articles
+  let totalPages
   try {
-    const response = await axios.get(apiURL + id);
-    articles = response.data;
+    const response = await axios.get(
+    `http://localhost:5000/api/user/${id}?page=${page}&limit=${limit}`
+    );
+    articles = response.data.results;
+    totalPages = Math.ceil(response.data.count / limit);
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 
-  return {
-    props: {
-      articles,
-    },
-  };
-};
 
-export default MyStory;
+  return { props: { articles, currentPage: page, totalPages } };
+};
