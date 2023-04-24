@@ -4,6 +4,32 @@ const cors = require("cors");
 app.use(cors());
 const { MongoClient } = require("mongodb");
 
+let ObjectId = require('mongodb').ObjectId
+
+app.get('/api/article/:id', async (req, res) => {
+  try {
+    let id = req.params.id;
+    let o_id = new ObjectId(id)
+    const client = new MongoClient(
+      "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
+    );
+    await client.connect();
+    const article = await client.db('db-name').collection('articleData').find({_id: o_id}).toArray(function(err, docs) {
+   });
+    //console.log(article)
+    await client.close();
+    if (article) {
+      
+      res.status(200).send(article[0]);
+    } else {
+      res.status(404).send({ message: "Article not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal server error" });
+  }
+});
+
 app.get("/api/articles", async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
@@ -50,9 +76,6 @@ app.get("/api/user/:id", async (req, res) => {
       if (err) {
         console.error(err);
         res.status(500).send({ message: "Internal server error" });
-      } else {
-        console.log(count); // should output the total number of documents that match the filter
-        // rest of your code
       }
     });
     
