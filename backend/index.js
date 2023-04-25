@@ -4,22 +4,23 @@ const cors = require("cors");
 app.use(cors());
 const { MongoClient } = require("mongodb");
 
-let ObjectId = require('mongodb').ObjectId
-
-app.get('/api/article/:id', async (req, res) => {
+let ObjectId = require("mongodb").ObjectId;
+app.use(express.json())
+app.get("/api/article/:id", async (req, res) => {
+  let id = req.params.id;
+  let o_id = new ObjectId(id);
+  const client = new MongoClient(
+    "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
+  );
   try {
-    let id = req.params.id;
-    let o_id = new ObjectId(id)
-    const client = new MongoClient(
-      "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
-    );
     await client.connect();
-    const article = await client.db('db-name').collection('articleData').find({_id: o_id}).toArray(function(err, docs) {
-   });
+    const article = await client
+      .db("db-name")
+      .collection("articleData")
+      .find({ _id: o_id })
+      .toArray(function (err, docs) {});
     //console.log(article)
-    await client.close();
     if (article) {
-      
       res.status(200).send(article[0]);
     } else {
       res.status(404).send({ message: "Article not found" });
@@ -27,6 +28,39 @@ app.get('/api/article/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Internal server error" });
+  } finally {
+    await client.close();
+  }
+});
+
+app.post("/api/article/comment/:id", async (req, res) => {
+  let id = req.params.id;
+  let o_id = new ObjectId(id);
+  const client = new MongoClient(
+    "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
+  );
+  try {
+    await client.connect();
+    const article = await client
+      .db("db-name")
+      .collection("articleData")
+      .updateOne(
+        { _id: o_id },
+        {
+          $push: {
+            comment: {
+              picture: req.body.picture,
+              username: req.body.username,
+              comment: req.body.comment,
+            },
+          },
+        }
+      );
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  } finally {
+    await client.close();
   }
 });
 
@@ -72,13 +106,16 @@ app.get("/api/user/:id", async (req, res) => {
   try {
     await client.connect();
     const articlesCollection = client.db("db-name").collection("articleData");
-    const count = await articlesCollection.countDocuments({ user_name: name }, (err, count) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send({ message: "Internal server error" });
+    const count = await articlesCollection.countDocuments(
+      { user_name: name },
+      (err, count) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send({ message: "Internal server error" });
+        }
       }
-    });
-    
+    );
+
     const articles = await articlesCollection
       .find({ user_name: name })
       .skip((page - 1) * limit)
@@ -102,7 +139,6 @@ app.get("/api/user/:id", async (req, res) => {
     await client.close();
   }
 });
-
 
 // Start the server
 app.listen(5000, () => console.log("Server started on port 5000"));
