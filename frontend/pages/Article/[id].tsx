@@ -52,7 +52,8 @@ const Article = ({ article }: { article: ArticleData }) => {
         setCommentData(response.data);
       });
     setCommentData(initalState);
-    router.push("/Article/" + id);
+    //router.push("/Article/" + id);
+    window.location.reload()
   }
 
   return (
