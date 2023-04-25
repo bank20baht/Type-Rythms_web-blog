@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React from "react";
 import Head from "next/head";
-
+import Comment from "@/components/CommentComponent"
 type ArticleData = {
   _id: string;
   title: string;
@@ -60,6 +60,24 @@ const Article = ({ article }: { article: ArticleData }) => {
           >
             EDIT
           </div>
+        </div>
+        <div className="m-5">
+          Leave a Comment:
+          <textarea
+            className="textarea-content"
+            rows={3}
+            name="comment"
+            placeholder="Comment something"
+            //onChange={}
+          ></textarea>
+          <div className="buttom-primary flex justify-center">
+            comment
+          </div>
+        </div>
+        <div className="m-5">
+          Comment
+          <Comment />
+          <Comment />
         </div>
       </div>
     </>
