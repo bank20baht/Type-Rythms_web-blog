@@ -73,7 +73,7 @@ const Article = ({ article }: { article: ArticleData }) => {
         <div className="sm:items-center m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5">
           <h1>{article.title}</h1>
         </div>
-        <div className=" m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5 whitespace-pre-wrap">
+        <div className="m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5 whitespace-pre-wrap">
           <p className="text-left">{article.content}</p>
         </div>
         <div className="flex flex-row justify-end p-2 m-2">
@@ -109,16 +109,20 @@ const Article = ({ article }: { article: ArticleData }) => {
             comment
           </div>
         </div>
-        <div className="m-5">
-          Comment
-          {article.comment.map((comment: any, index: number) => (
-            <CommentComponent key={index} comment={comment} />
-          ))}
-        </div>
+        {article.comment && article.comment.length > 0 ? (
+          <div className="m-5">
+            <h3>Comments:</h3>
+            {article.comment.map((comment: any, index: number) => (
+              <CommentComponent key={index} comment={comment} />
+            ))}
+          </div>
+        ) : (
+          <div>No comments yet</div>
+        )}
       </div>
     </>
-  );
-};
+  )
+}
 
 export default Article;
 
@@ -127,7 +131,8 @@ export async function getServerSideProps(context: any) {
 
   try {
     const response = await axios.get(apiURL + id);
-    const article = response.data;
+    const { data: article } = response;
+
     return {
       props: { article },
     };
@@ -139,3 +144,4 @@ export async function getServerSideProps(context: any) {
     };
   }
 }
+
