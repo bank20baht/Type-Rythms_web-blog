@@ -118,7 +118,7 @@ const Article = ({ article }: { article: ArticleData }) => {
             ))}
           </div>
         ) : (
-          <div>No comments yet</div>
+          <div></div>
         )}
       </div>
     </>

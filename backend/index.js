@@ -5,7 +5,7 @@ app.use(cors());
 const { MongoClient } = require("mongodb");
 
 let ObjectId = require("mongodb").ObjectId;
-app.use(express.json())
+app.use(express.json());
 app.get("/api/article/:id", async (req, res) => {
   let id = req.params.id;
   let o_id = new ObjectId(id);
@@ -132,6 +132,40 @@ app.get("/api/user/:id", async (req, res) => {
     } else {
       res.status(404).send({ message: "Articles not found" });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal server error" });
+  } finally {
+    await client.close();
+  }
+});
+
+app.put("/api/update/article", async (req, res) => {
+  const article = req.body;
+  let o_id = new ObjectId(article._id);
+  const client = new MongoClient(
+    "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
+  );
+  try {
+    await client.connect();
+    await client
+      .db("db-name")
+      .collection("articleData")
+      .updateOne(
+        { _id: o_id },
+        {
+          $set: {
+            title: article.title,
+            content: article.content,
+            name: article.name,
+            email: article.email,
+          },
+        }
+      );
+    res.status(200).send({
+      status: "ok",
+      message: "Article with ID = " + " is updated",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Internal server error" });
