@@ -72,7 +72,6 @@ app.get("/api/articles", async (req, res) => {
   );
   try {
     await client.connect();
-    //console.log("DB Connected");
     const articlesCollection = client.db("db-name").collection("articleData");
 
     const count = await articlesCollection.countDocuments();
