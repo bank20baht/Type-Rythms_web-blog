@@ -1,5 +1,9 @@
+import Head from "next/head"
 export default function FourOFour() {
   return <>
+    <Head>
+        <title>404 page not found.</title>
+    </Head>
 	<div className="container flex flex-col items-center justify-center px-5 mx-auto my-8 content-center">
 		<div className="max-w-md text-center">
 			<h2 className="mb-8 font-extrabold text-9xl text-red-400">
