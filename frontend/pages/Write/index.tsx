@@ -4,7 +4,8 @@ import axios from "axios";
 import Head from "next/head";
 const apiURL = "http://localhost:5000/api/addArticle";
 
-const index = () => {
+
+const Write = () => {
   const router = useRouter();
   const [articles, setArticles] = useState();
   const initalState = {
@@ -64,3 +65,5 @@ const index = () => {
 
   );
 };
+
+export default Write

@@ -76,7 +76,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const page = query.page ? Number(query.page) : 1;
   const limit = 5;
   let articles = null;
-  let totalPages;
+  let totalPages = 0;
   try {
     const response = await axios.get(
       `http://localhost:5000/api/articles?page=${page}&limit=${limit}`

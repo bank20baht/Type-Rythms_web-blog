@@ -93,6 +93,6 @@ export const getServerSideProps = async ({ params }: any) => {
     return { props: { articleData } };
   } catch (error) {
     console.error(error);
-    return { props: {} };
+    return { notFound: true };
   }
 };

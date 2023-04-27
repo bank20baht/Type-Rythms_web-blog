@@ -3,8 +3,8 @@ const app = express();
 const cors = require("cors");
 app.use(cors());
 const { MongoClient } = require("mongodb");
-
 let ObjectId = require("mongodb").ObjectId;
+
 app.use(express.json());
 app.get("/api/article/:id", async (req, res) => {
   let id = req.params.id;
