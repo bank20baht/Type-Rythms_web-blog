@@ -173,5 +173,30 @@ app.put("/api/update/article", async (req, res) => {
   }
 });
 
+app.delete("/api/article/:id", async (req, res) => {
+  let id = req.params.id;
+  let o_id = new ObjectId(id);
+  const client = new MongoClient(
+    "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
+  );
+  try {
+    await client.connect();
+    const article = await client
+      .db("db-name")
+      .collection("articleData")
+      .deleteOne({ _id: o_id });
+    if (article) {
+      res.status(200).send({ message: "Article" + id + "is deleted" });
+    } else {
+      res.status(404).send({ message: "Article not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal server error" });
+  } finally {
+    await client.close();
+  }
+});
+
 // Start the server
 app.listen(5000, () => console.log("Server started on port 5000"));

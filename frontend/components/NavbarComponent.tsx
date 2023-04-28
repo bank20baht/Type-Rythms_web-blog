@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import logo from "@/components/logo.png";
+
 const NavbarComponent = () => {
   const islogin = true;
   const user = "Bank20baht"
