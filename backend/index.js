@@ -33,6 +33,36 @@ app.get("/api/article/:id", async (req, res) => {
   }
 });
 
+app.post('/api/addArticle', async(req, res) => {
+  const article = req.body
+  const timestamp = new Date();
+  const client = new MongoClient(
+    "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
+  );
+  try {
+    await client.connect();
+    await client.db('db-name').collection('articleData').insertOne({
+      title: article.title,
+      content: article.content,
+      user_email: article.user_email,
+      timestamp: timestamp,
+      user_name: article.user_name,
+      user_img: article.user_img
+    })
+
+    res.status(200).send({
+      "status": "ok",
+      "massage": "Article with ID = " + article.id + "is created"
+    })
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  } finally {
+      await client.close()
+  }
+
+})
+
 app.post("/api/article/comment/:id", async (req, res) => {
   let id = req.params.id;
   let o_id = new ObjectId(id);

@@ -19,7 +19,7 @@ const CardArticleComponent = (props: any) => {
                 <h1 className='font-bold text-2xl'>{article.title}</h1>
                 <div className='flex flex-row justify-center'>
                     <img className='avatar-img' src={article?.user_img} alt="u_img"/>
-                    <h2 className='m-1'>{article.user_name} | {getDate()}</h2>
+                    <span className='m-1'>{article.user_name} | {getDate()}</span>
                 </div>
             </div>
         </div>

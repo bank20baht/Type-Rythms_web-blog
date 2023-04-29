@@ -74,7 +74,7 @@ export default function Home({ articles, currentPage, totalPages }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const page = query.page ? Number(query.page) : 1;
-  const limit = 5;
+  const limit = 10;
   let articles = null;
   let totalPages = 0;
   try {

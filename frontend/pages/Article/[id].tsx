@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Head from "next/head";
 import CommentComponent from "@/components/CommentComponent";
-
+import ReactMarkdown from "react-markdown";
 export type CommentData = {
   picture: string;
   username: string;
@@ -72,14 +72,14 @@ const Article = ({ article }: { article: ArticleData }) => {
       </Head>
       <div className="contaniner">
         <div className="sm:items-center m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5">
-          <h1>{article.title}</h1>
+          <h2>{article.title}</h2>
         </div>
-        <div className="m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5 whitespace-pre-wrap">
-          <p className="text-left">{article.content}</p>
+        <div className="m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5 ">
+          <ReactMarkdown>{article.content}</ReactMarkdown>
         </div>
         <div className="flex flex-row justify-end p-2 m-2">
           <img className="avatar-img" src={article.user_img} alt="u_img" />
-          <h2 className="m-1">{article.user_name}</h2>
+          <span className="m-1">{article.user_name}</span>
         </div>
         <div className="flex flex-row justify-end">
           <div className="buttom-primary w-auto" onClick={deleteArticle}>
