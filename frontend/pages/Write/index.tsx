@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Head from "next/head";
+import { VscCheck } from "react-icons/vsc";
 const apiURL = "http://localhost:5000/api/addArticle";
 
 
@@ -58,7 +59,7 @@ const Write = () => {
         onChange={handleChange}
       ></textarea>
       <div className="flex justify-end p-2 m-2 max-w-[120rem] w-full mx-auto">
-        <div className="buttom-primary" onClick={postArticle}>Write</div>
+        <div className="buttom-primary flex" onClick={postArticle}>Write<VscCheck/></div>
       </div>
     </div>
     </>

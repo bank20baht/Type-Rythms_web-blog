@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Head from "next/head";
 import CommentComponent from "@/components/CommentComponent";
 import ReactMarkdown from "react-markdown";
+import { VscEdit, VscClose, VscComment, VscHeart, VscHeartFilled } from "react-icons/vsc";
 export type CommentData = {
   picture: string;
   username: string;
@@ -76,22 +77,27 @@ const Article = ({ article }: { article: ArticleData }) => {
         </div>
         <div className="m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5 ">
           <ReactMarkdown>{article.content}</ReactMarkdown>
+          <span className="h-0.5 w-full bg-gray-200 lg:w-1/3 m-1"></span>
+          <div className="flex">
+            <VscHeart/>
+            <span>Like</span>
+          </div>
         </div>
         <div className="flex flex-row justify-end p-2 m-2">
           <img className="avatar-img" src={article.user_img} alt="u_img" />
           <span className="m-1">{article.user_name}</span>
         </div>
         <div className="flex flex-row justify-end">
-          <div className="buttom-primary w-auto" onClick={deleteArticle}>
-            DEL
+          <div className="buttom-secondary w-auto flex" onClick={deleteArticle}>
+            <VscClose/>DEL
           </div>
           <div
-            className="buttom-secondary w-auto"
+            className="buttom-primary w-auto flex"
             onClick={() => {
               router.push("/Edit/" + article._id);
             }}
           >
-            EDIT
+            <VscEdit/>EDIT
           </div>
         </div>
         <div className="m-5">
@@ -104,10 +110,10 @@ const Article = ({ article }: { article: ArticleData }) => {
             onChange={handleChange}
           ></textarea>
           <div
-            className="buttom-primary flex justify-center"
+            className="buttom-primary w-auto flex justify-center"
             onClick={postComment}
           >
-            comment
+            <VscComment/>comment
           </div>
         </div>
         {article.comment && article.comment.length > 0 ? (

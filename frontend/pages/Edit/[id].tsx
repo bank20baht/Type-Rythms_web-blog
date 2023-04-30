@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { VscCheckAll } from "react-icons/vsc";;
 const apiURL = "http://localhost:5000/api/article/";
 
 type Props = {
@@ -71,8 +72,8 @@ const Edit = ({ articleData }: Props) => {
           onChange={handleChange}
         ></textarea>
         <div className="flex justify-end p-2 m-2 max-w-[120rem] w-full mx-auto">
-          <div className="buttom-primary" onClick={handleSubmit}>
-            Update
+          <div className="buttom-primary flex" onClick={handleSubmit}>
+            Update<VscCheckAll/>
           </div>
         </div>
       </div>

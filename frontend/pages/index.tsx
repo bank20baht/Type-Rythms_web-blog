@@ -2,7 +2,7 @@ import axios from "axios";
 import CardArticle from "@/components/CardArticleComponent";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-
+import { VscChevronRight, VscChevronLeft } from "react-icons/vsc";
 export type ArticleData = {
   _id: string;
   title: string;
@@ -58,13 +58,13 @@ export default function Home({ articles, currentPage, totalPages }: Props) {
       </div>
       <div className="flex justify-center">
         {currentPage > 1 && (
-          <button className="buttom-primary w-1/8" onClick={goToPreviousPage}>
-            Previous
+          <button className="buttom-primary w-1/8 flex" onClick={goToPreviousPage}>
+            <VscChevronLeft/>Previous
           </button>
         )}
         {currentPage < totalPages && (
-          <button className="buttom-primary w-1/8" onClick={goToNextPage}>
-            Next
+          <button className="buttom-primary w-1/8 flex" onClick={goToNextPage}>
+            Next<VscChevronRight />
           </button>
         )}
       </div>

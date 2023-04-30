@@ -16,7 +16,7 @@
     @apply py-2 px-4 border border-black font-medium text-black bg-white hover:bg-red-600 hover:text-white;
   }
   .buttom-secondary {
-    @apply py-2 px-4 bg-red-500 border border-white text-white hover:bg-white hover:text-black
+    @apply py-2 px-4 bg-red-500 border border-white text-white hover:bg-white hover:text-black;
   }
   .navbar-text {
     @apply font-medium text-white hover:text-gray-400;
@@ -24,7 +24,7 @@
   .logo {
     @apply flex-none text-xl font-semibold dark:text-white;
   }
-  .contaniner {
+  .container {
     @apply max-w-[120rem] w-full mx-auto;
   }
   .input-title {
@@ -36,78 +36,98 @@
   .avatar-img {
     @apply rounded-full w-6 h-6 m-1;
   }
-/* Style all headings */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @apply font-bold mb-2;
-}
 
-/* Style each heading level differently */
-h1 {
-  @apply text-3xl;
-}
+  @media (max-width: 640px) {
+    .navbar {
+      @apply flex-col items-center text-center;
+    }
+    .logo {
+      @apply mt-4 mb-2;
+    }
+    .navbar-text {
+      @apply mb-4;
+    }
+    .input-title,
+    .textarea-content {
+      @apply max-w-full;
+    }
+    .buttom-primary,
+    .buttom-secondary {
+      @apply block w-full;
+    }
+    h1 {
+      @apply text-2xl;
+    }
+    h2 {
+      @apply text-xl;
+    }
+    h3 {
+      @apply text-lg;
+    }
+    h4 {
+      @apply text-base;
+    }
+    h5 {
+      @apply text-sm;
+    }
+    h6 {
+      @apply text-xs;
+    }
+    pre {
+      @apply text-sm;
+    }
+  }
 
-h2 {
-  @apply text-2xl;
-}
+  /* Style all headings */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold mb-2;
+  }
 
-h3 {
-  @apply text-xl;
-}
+  /* Style each heading level differently */
+  h1 {
+    @apply text-3xl;
+  }
 
-h4 {
-  @apply text-lg;
-}
+  h2 {
+    @apply text-2xl;
+  }
 
-h5 {
-  @apply text-base;
-}
+  h3 {
+    @apply text-xl;
+  }
 
-h6 {
-  @apply text-sm;
-}
+  h4 {
+    @apply text-lg;
+  }
 
-/* Style inline code */
-code {
-  @apply bg-gray-200 py-1 px-2 rounded;
-}
+  h5 {
+    @apply text-base;
+  }
 
-/* Style code blocks */
-pre {
-  @apply bg-gray-200 p-4 rounded;
-}
+  h6 {
+    @apply text-sm;
+  }
 
-/* Style blockquotes */
-blockquote {
-  @apply border-l-4 border-gray-400 pl-4 italic my-8;
-}
-a {
-  @apply text-blue-500 no-underline;
-}
+  /* Style inline code */
+  code {
+    @apply bg-gray-200 py-1 px-2 rounded;
+  }
 
+  /* Style code blocks */
+  pre {
+    @apply bg-gray-200 p-4 rounded;
+  }
 
-
-}
-/*
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+  /* Style blockquotes */
+  blockquote {
+    @apply border-l-4 border-gray-400 pl-4 italic my-8;
+  }
+  a {
+    @apply text-blue-500 no-underline
   }
 }
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-*/
