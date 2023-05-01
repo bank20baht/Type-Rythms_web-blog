@@ -17,7 +17,7 @@ const NavbarComponent = () => {
           Type-Rythms
         </a>
         <div className=" flex flex-row items-center gap-2 mt-5 sm:justify-end sm:mt-0 sm:pl-5">
-          <a className="buttom-secondary flex" href="/" aria-current="page">
+          <a className="buttom-secondary flex justify-between" href="/" aria-current="page">
             <VscPreview />
             main
           </a>

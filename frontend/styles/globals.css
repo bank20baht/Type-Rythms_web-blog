@@ -22,7 +22,7 @@
     @apply font-medium text-white hover:text-gray-400;
   }
   .logo {
-    @apply flex-none text-xl font-semibold dark:text-white;
+    @apply text-xl font-semibold dark:text-white;
   }
   .container {
     @apply max-w-[120rem] w-full mx-auto;

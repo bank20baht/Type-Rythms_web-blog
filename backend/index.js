@@ -1,10 +1,10 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const mongodb = require('mongodb');
-require('dotenv').config();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const mongodb = require("mongodb");
+require("dotenv").config();
 app.use(cors());
 const { MongoClient } = require("mongodb");
 let ObjectId = require("mongodb").ObjectId;
@@ -13,96 +13,114 @@ app.use(express.json());
 
 const mongoClient = mongodb.MongoClient;
 const dbName = "db-name";
-const userCollectionName = 'users';
+const userCollectionName = "users";
 
-app.post('/register', async (req, res) => {
+app.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!(email && password && name)) {
-      return res.status(400).send('All input is required');
+      return res.status(400).send("All input is required");
     }
-    const client = await mongoClient.connect("mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority");
+    const client = await mongoClient.connect(
+      "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
+    );
     const db = client.db(dbName);
     const userCollection = db.collection(userCollectionName);
     const oldUser = await userCollection.findOne({ email });
     if (oldUser) {
       client.close();
-      return res.status(409).send('User already exists. Please login');
+      return res.status(409).send("User already exists. Please login");
     }
     const encryptedPassword = await bcrypt.hash(password, 10);
     const newUser = {
       name,
       email: email.toLowerCase(),
       password: encryptedPassword,
-      image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1143&q=80"
+      image:
+        "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1143&q=80",
     };
     const result = await userCollection.insertOne(newUser);
-    const accesstoken = jwt.sign({ user_id: result.insertedId, email }, process.env.TOKEN_KEY, {
-      expiresIn: '2h',
-    });
-    newUser.accesstoken = accesstoken;
+    const access_token = jwt.sign(
+      { user_id: result.insertedId, email },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: "2h",
+        algorithm: "HS256",
+      }
+    );
+    const refresh_token = jwt.sign(
+      { user_id: result.insertedId, email },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "1d", algorithm: "HS256" }
+    );
+    newUser.accesstoken = access_token;
+    newUser.refreshtoken = refresh_token;
     client.close();
     return res.status(201).json(newUser);
   } catch (err) {
     console.log(err);
-    return res.status(500).send('Internal server error');
+    return res.status(500).send("Internal server error");
   }
 });
 
 // Login
-app.post('/login', async (req, res) => {
+app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!(email && password)) {
-      return res.status(400).send('All input is required');
+      return res.status(400).send("All input is required");
     }
-    const client = await mongoClient.connect("mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority");
+    const client = await mongoClient.connect(
+      "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
+    );
     const db = client.db(dbName);
     const userCollection = db.collection(userCollectionName);
     const user = await userCollection.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const access_token = jwt.sign({ user_id: user._id, email }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '2h' , algorithm: "HS256"
-      });
-      const refresh_token = jwt.sign({ user_id: user._id, email }, process.env.REFRESH_TOKEN_SECRET, 
+      const access_token = jwt.sign(
+        { user_id: user._id, email },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+          expiresIn: "2h",
+          algorithm: "HS256",
+        }
+      );
+      const refresh_token = jwt.sign(
+        { user_id: user._id, email },
+        process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "1d", algorithm: "HS256" }
-      )
+      );
       user.accesstoken = access_token;
       user.refreshtoken = refresh_token;
       client.close();
       return res.status(200).json(user);
     }
     client.close();
-    return res.status(400).send('Invalid credentials');
+    return res.status(400).send("Invalid credentials");
   } catch (err) {
     console.log(err);
-    return res.status(500).send('Internal server error');
+    return res.status(500).send("Internal server error");
   }
 });
 // Middleware for JWT authentication
 const jwtValidate = (req, res, next) => {
   try {
-    if (!req.headers["authorization"]) return res.sendStatus(401)
+    if (!req.headers["authorization"]) return res.sendStatus(401);
 
-    const token = req.headers["authorization"].replace("Bearer ", "")
+    const token = req.headers["authorization"].replace("Bearer ", "");
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-      if (err) throw new Error(error)
-    })
-    next()
+      if (err) throw new Error(error);
+    });
+    next();
   } catch (error) {
-    return res.sendStatus(403)
+    return res.sendStatus(403);
   }
-}
+};
 // Welcome
-app.get('/welcome', jwtValidate, (req, res) => {
+app.get("/welcome", jwtValidate, (req, res) => {
   res.status(200).send(`Welcome`);
 });
-
-
-
-
-
 
 app.get("/api/article/:id", async (req, res) => {
   let id = req.params.id;
@@ -131,35 +149,34 @@ app.get("/api/article/:id", async (req, res) => {
   }
 });
 
-app.post('/api/addArticle', async(req, res) => {
-  const article = req.body
+app.post("/api/addArticle", async (req, res) => {
+  const article = req.body;
   const timestamp = new Date();
   const client = new MongoClient(
     "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
   );
   try {
     await client.connect();
-    await client.db('db-name').collection('articleData').insertOne({
+    await client.db("db-name").collection("articleData").insertOne({
       title: article.title,
       content: article.content,
       user_email: article.user_email,
       timestamp: timestamp,
       user_name: article.user_name,
-      user_img: article.user_img
-    })
+      user_img: article.user_img,
+    });
 
     res.status(200).send({
-      "status": "ok",
-      "massage": "Article with ID = " + article.id + "is created"
-    })
+      status: "ok",
+      massage: "Article with ID = " + article.id + "is created",
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server Error');
+    res.status(500).send("Server Error");
   } finally {
-      await client.close()
+    await client.close();
   }
-
-})
+});
 
 app.post("/api/article/comment/:id", async (req, res) => {
   let id = req.params.id;

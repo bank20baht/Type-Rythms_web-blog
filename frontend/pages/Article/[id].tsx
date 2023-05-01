@@ -79,10 +79,10 @@ const Article = ({ article }: { article: ArticleData }) => {
         ></meta>
       </Head>
       <div className="contaniner">
-        <div className="sm:items-center m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5">
+        <div className="m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5 whitespace-pre-wrap overflow-break-word break-words">
           <h2>{article.title}</h2>
         </div>
-        <div className="m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5 ">
+        <div className="m-3 flex flex-col  bg-white border shadow-md rounded-xl p-4 md:p-5 whitespace-pre-wrap overflow-break-word break-words">
           <ReactMarkdown>{article.content}</ReactMarkdown>
           <span className="divider-line"></span>
           <div className="flex">
