@@ -37,10 +37,10 @@ app.post('/register', async (req, res) => {
       image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1143&q=80"
     };
     const result = await userCollection.insertOne(newUser);
-    const token = jwt.sign({ user_id: result.insertedId, email }, process.env.TOKEN_KEY, {
+    const accesstoken = jwt.sign({ user_id: result.insertedId, email }, process.env.TOKEN_KEY, {
       expiresIn: '2h',
     });
-    newUser.token = token;
+    newUser.accesstoken = accesstoken;
     client.close();
     return res.status(201).json(newUser);
   } catch (err) {
@@ -61,10 +61,14 @@ app.post('/login', async (req, res) => {
     const userCollection = db.collection(userCollectionName);
     const user = await userCollection.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign({ user_id: user._id, email }, process.env.TOKEN_KEY, {
-        expiresIn: '2h',
+      const access_token = jwt.sign({ user_id: user._id, email }, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: '2h' , algorithm: "HS256"
       });
-      user.token = token;
+      const refresh_token = jwt.sign({ user_id: user._id, email }, process.env.REFRESH_TOKEN_SECRET, 
+        { expiresIn: "1d", algorithm: "HS256" }
+      )
+      user.accesstoken = access_token;
+      user.refreshtoken = refresh_token;
       client.close();
       return res.status(200).json(user);
     }
@@ -75,27 +79,28 @@ app.post('/login', async (req, res) => {
     return res.status(500).send('Internal server error');
   }
 });
-
-// Welcome
-app.get('/welcome', auth, (req, res) => {
-  res.status(200).send(`Welcome ${req.user.email}`);
-});
-
 // Middleware for JWT authentication
-function auth(req, res, next) {
-  const token = req.header('Authorization');
-  if (!token) {
-    return res.status(401).send('Access denied. No token provided');
-  }
+const jwtValidate = (req, res, next) => {
   try {
-    const decoded = jwt.verify(token, process.env.TOKEN_KEY);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send('Invalid token');
+    if (!req.headers["authorization"]) return res.sendStatus(401)
+
+    const token = req.headers["authorization"].replace("Bearer ", "")
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) throw new Error(error)
+    })
+    next()
+  } catch (error) {
+    return res.sendStatus(403)
   }
 }
+// Welcome
+app.get('/welcome', jwtValidate, (req, res) => {
+  res.status(200).send(`Welcome`);
+});
+
+
+
 
 
 

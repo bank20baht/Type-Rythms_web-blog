@@ -20,7 +20,7 @@ const LoginPage = ({ searchParams }: IProps) => {
   return (
     <div
       className={
-        "flex flex-col justify-center items-center  h-screen bg-gradient-to-br gap-1 from-cyan-300 to-sky-600"
+        "flex flex-col justify-center items-center  h-screen bg-gradient-to-br gap-1 from-red-200 to-white"
       }
     >
       {searchParams?.message && (
