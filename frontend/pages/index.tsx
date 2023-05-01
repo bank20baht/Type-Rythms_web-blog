@@ -3,6 +3,7 @@ import CardArticle from "@/components/CardArticleComponent";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { VscChevronRight, VscChevronLeft } from "react-icons/vsc";
+import { signIn } from "next-auth/react";
 export type ArticleData = {
   _id: string;
   title: string;

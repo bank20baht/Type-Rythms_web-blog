@@ -1,11 +1,104 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const mongodb = require('mongodb');
+require('dotenv').config();
 app.use(cors());
 const { MongoClient } = require("mongodb");
 let ObjectId = require("mongodb").ObjectId;
 
 app.use(express.json());
+
+const mongoClient = mongodb.MongoClient;
+const dbName = "db-name";
+const userCollectionName = 'users';
+
+app.post('/register', async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!(email && password && name)) {
+      return res.status(400).send('All input is required');
+    }
+    const client = await mongoClient.connect("mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority");
+    const db = client.db(dbName);
+    const userCollection = db.collection(userCollectionName);
+    const oldUser = await userCollection.findOne({ email });
+    if (oldUser) {
+      client.close();
+      return res.status(409).send('User already exists. Please login');
+    }
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    const newUser = {
+      name,
+      email: email.toLowerCase(),
+      password: encryptedPassword,
+      image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1143&q=80"
+    };
+    const result = await userCollection.insertOne(newUser);
+    const token = jwt.sign({ user_id: result.insertedId, email }, process.env.TOKEN_KEY, {
+      expiresIn: '2h',
+    });
+    newUser.token = token;
+    client.close();
+    return res.status(201).json(newUser);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Internal server error');
+  }
+});
+
+// Login
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!(email && password)) {
+      return res.status(400).send('All input is required');
+    }
+    const client = await mongoClient.connect("mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority");
+    const db = client.db(dbName);
+    const userCollection = db.collection(userCollectionName);
+    const user = await userCollection.findOne({ email });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const token = jwt.sign({ user_id: user._id, email }, process.env.TOKEN_KEY, {
+        expiresIn: '2h',
+      });
+      user.token = token;
+      client.close();
+      return res.status(200).json(user);
+    }
+    client.close();
+    return res.status(400).send('Invalid credentials');
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Internal server error');
+  }
+});
+
+// Welcome
+app.get('/welcome', auth, (req, res) => {
+  res.status(200).send(`Welcome ${req.user.email}`);
+});
+
+// Middleware for JWT authentication
+function auth(req, res, next) {
+  const token = req.header('Authorization');
+  if (!token) {
+    return res.status(401).send('Access denied. No token provided');
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send('Invalid token');
+  }
+}
+
+
+
 app.get("/api/article/:id", async (req, res) => {
   let id = req.params.id;
   let o_id = new ObjectId(id);

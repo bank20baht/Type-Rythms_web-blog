@@ -3,7 +3,7 @@ import CardArticle from "@/components/CardArticleComponent";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-
+import { useSession } from "next-auth/react"
 export type ArticleData = {
   _id: string;
   title: string;
@@ -22,6 +22,7 @@ interface Props {
 export default function User({ articles, currentPage, totalPages }: Props) {
   const router = useRouter();
   const { id } = router.query
+  const { data: session } = useSession()
   const goToNextPage = () => {
     window.location.href = `/?page=${currentPage + 1}`;
   };
@@ -47,11 +48,11 @@ export default function User({ articles, currentPage, totalPages }: Props) {
       <div className="max-w-[120rem] w-full mx-auto sm:items-center m-3 flex flex-col justify-center">
           <img
             className="rounded-full w-20 h-20 m-1"
-            src={articles[0].user_img}
+            src={session?.user?.image as string}
             alt="u_img"
           />
-          <div className="">{articles[0].user_name}</div>
-          <div>{articles[0].user_email}</div>
+          <div className="">{session?.user?.name}</div>
+          <div>{session?.user?.email}</div>
         </div>
         {articles && articles.length > 0 ? (
           articles

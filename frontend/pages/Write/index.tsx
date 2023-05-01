@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Head from "next/head";
@@ -7,6 +8,7 @@ const apiURL = "http://localhost:5000/api/addArticle";
 
 
 const Write = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const [articles, setArticles] = useState();
   const initalState = {
@@ -26,9 +28,9 @@ const Write = () => {
       .post(apiURL, {
         title: articleData.title,
         content: articleData.content,
-        user_email: "bank",
-        user_name: "bank",
-        user_img: "https://images.unsplash.com/photo-1679755177681-21638a9de135?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=465&q=80",
+        user_email: session?.user?.email,
+        user_name: session?.user?.name,
+        user_img: session?.user?.image,
       })
       .then((resspone) => {
         setArticles(resspone.data);
@@ -58,6 +60,7 @@ const Write = () => {
         placeholder="Content"
         onChange={handleChange}
       ></textarea>
+              <div className="flex justify-end">Posting as {session?.user?.name}</div>
       <div className="flex justify-end p-2 m-2 max-w-[120rem] w-full mx-auto">
         <div className="buttom-primary flex" onClick={postArticle}>Write<VscCheck/></div>
       </div>
