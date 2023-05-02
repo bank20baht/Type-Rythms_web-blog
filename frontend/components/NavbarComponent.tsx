@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import icon from "@/components/logo.ico";
 import { VscAccount, VscEdit, VscPreview } from "react-icons/vsc";
+
 const NavbarComponent = () => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -12,12 +13,16 @@ const NavbarComponent = () => {
         className="max-w-[120rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between"
         aria-label="Global"
       >
-        <a className="logo flex items-center " href="/">
+        <a className="logo flex items-center" href="/">
           <img src={icon.src} className="w-auto" />
           Type-Rythms
         </a>
-        <div className=" flex flex-row items-center gap-2 mt-5 sm:justify-end sm:mt-0 sm:pl-5">
-          <a className="buttom-secondary flex justify-between" href="/" aria-current="page">
+        <div className="flex flex-row items-center gap-2 mt-5 sm:justify-end sm:mt-0 sm:pl-5">
+          <a
+            className="buttom-secondary flex justify-between d-flex align-items-center"
+            href="/"
+            aria-current="page"
+          >
             <VscPreview />
             main
           </a>
@@ -36,17 +41,15 @@ const NavbarComponent = () => {
                 <VscAccount />
                 {session.user.name}
               </a>
-              <a>
-                <a className="buttom-primary" onClick={() => signOut()}>
-                  Sign Out
-                </a>
-              </a>
+              <div className="buttom-primary" onClick={() => signOut()}>
+                Sign Out
+              </div>
             </>
           ) : (
             <>
-              <a className="buttom-secondary" onClick={() => signIn()}>
+              <div className="buttom-secondary" onClick={() => signIn()}>
                 Sign In
-              </a>
+              </div>
               <a className="buttom-primary" href="/Register">
                 Register
               </a>

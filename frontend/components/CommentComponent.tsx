@@ -10,7 +10,7 @@ const CommentComponent = (props: any) => {
         alt="comment_u_img"
       />
       <div className="max">
-        <div className="p-1 font-semibold whitespace-pre-wrap overflow-break-word break-words" >{comment.username}</div>
+        <div className="p-1 font-semibold break-all" >{comment.username}</div>
         <div className="p-1 break-all">{comment.comment} </div>
       </div>
     </div>
