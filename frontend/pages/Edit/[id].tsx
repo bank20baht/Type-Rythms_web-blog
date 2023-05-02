@@ -26,7 +26,6 @@ const EditPage = ({ articleData }: Props) => {
   };
 
   const onSubmit = async (values: any) => {
-    console.log(values.title + "/" + values.content)
     try {
       const response = await axios.put(
         "http://localhost:5000/api/update/article", 
