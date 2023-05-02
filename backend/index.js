@@ -103,6 +103,7 @@ app.post("/login", async (req, res) => {
   }
 });
 // Middleware for JWT authentication
+
 const jwtValidate = (req, res, next) => {
   try {
     if (!req.headers["authorization"]) return res.sendStatus(401);
@@ -110,16 +111,21 @@ const jwtValidate = (req, res, next) => {
     const token = req.headers["authorization"].replace("Bearer ", "");
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-      if (err) throw new Error(error);
+      if (err) {
+        throw new Error(error);
+      } else {
+        req.user = decoded;
+        next();
+      }
     });
-    next();
   } catch (error) {
     return res.sendStatus(403);
   }
 };
-// Welcome
+
 app.get("/welcome", jwtValidate, (req, res) => {
-  res.status(200).send(`Welcome`);
+  const { user } = req;
+  res.status(200).send(`Hello ${user.email}`);
 });
 
 app.get("/api/article/:id", async (req, res) => {
