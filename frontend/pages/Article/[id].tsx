@@ -78,7 +78,7 @@ const Article = ({ article }: { article: ArticleData }) => {
           content="width=device-width, initial-scale=1.0"
         ></meta>
       </Head>
-      <div className="contaniner">
+      <div className="contaniner whitespace-pre-wrap overflow-wrap-break-word">
         <div className="m-3 flex flex-col items-center  bg-white border shadow-md rounded-xl p-4 md:p-5 break-all">
           <h2>{article.title}</h2>
         </div>
