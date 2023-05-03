@@ -29,14 +29,14 @@ export type ArticleData = {
   comment: CommentData[];
 };
 
-const apiURL = "http://localhost:5000/api/article/";
+const apiURL = "http://localhost:5000/api/articles/";
 
 const Article = ({ article }: { article: ArticleData }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const { id } = router.query;
   const deleteArticle = async () => {
-    await axios.delete(apiURL + article._id);
+    await axios.delete(apiURL + "delete/" + article._id);
     router.push("/");
   };
   const initalState = {

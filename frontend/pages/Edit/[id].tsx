@@ -6,7 +6,7 @@ import { VscCheckAll } from "react-icons/vsc";
 import { object, string } from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useSession } from "next-auth/react";
-const apiURL = "http://localhost:5000/api/article/";
+const apiURL = "http://localhost:5000/api/articles/";
 
 type Props = {
   articleData: {
@@ -28,9 +28,8 @@ const EditPage = ({ articleData }: Props) => {
   const onSubmit = async (values: any) => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/update/article", 
+        "http://localhost:5000/api/articles/edit/" + id, 
       {
-        _id: id,
         title: values.title,
         content: values.content,
         user_email: session?.user?.email,

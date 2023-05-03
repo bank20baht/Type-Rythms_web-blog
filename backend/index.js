@@ -64,7 +64,7 @@ app.post("/register", async (req, res) => {
 });
 
 // Login
-app.post("/login", async (req, res) => {
+app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!(email && password)) {
@@ -217,7 +217,7 @@ app.post("/api/article/comment/:id", async (req, res) => {
 
 app.get("/api/articles", async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 5;
+  const limit = parseInt(req.query.limit) || 10;
   const client = new MongoClient(
     "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
   );
@@ -290,9 +290,10 @@ app.get("/api/user/:id", async (req, res) => {
   }
 });
 
-app.put("/api/update/article", async (req, res) => {
-  const article = req.body;
-  let o_id = new ObjectId(article._id);
+app.put("/api/update/article/:id", async (req, res) => {
+  let id = req.params.id;
+  const article = req.body
+  let o_id = new ObjectId(id);
   const client = new MongoClient(
     "mongodb+srv://admin:admin@madoo.kljytni.mongodb.net/?retryWrites=true&w=majority"
   );

@@ -7,7 +7,7 @@ import { VscCheck } from "react-icons/vsc";
 import { object, string } from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-const apiURL = "http://localhost:5000/api/addArticle";
+const apiURL = "http://localhost:5000/api/articles/";
 
 const Write = () => {
   const { data: session } = useSession();
