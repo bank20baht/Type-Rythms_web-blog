@@ -5,7 +5,6 @@ module.exports = (req, res, next) => {
       if (!req.body.refreshtoken) return res.sendStatus(401);
         
       const token = req.body.refreshtoken
-      console.log("refresstoken => ", token)
       jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
         if (err) {
           throw new Error(error);

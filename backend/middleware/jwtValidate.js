@@ -5,7 +5,6 @@ module.exports = (req, res, next) => {
       if (!req.headers["authorization"]) return res.sendStatus(401);
   
       const token = req.headers["authorization"].replace("Bearer ", "");
-      console.log("accesstoken => ", token)
       jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
         if (err) {
           throw new Error(error);
