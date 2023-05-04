@@ -6,7 +6,7 @@ const register = require("./routes/registers");
 const auth = require("./routes/auth");
 const articles = require("./routes/articles");
 const cors = require("cors");
-const jwtValidate = require("./middleware/auth")
+const jwtValidate = require("./middleware/jwtValidate")
 
 connection();
 app.use(cors());

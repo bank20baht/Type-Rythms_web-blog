@@ -2,9 +2,8 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const { Article, validate } = require("../models/article");
-const jwtValidate = require("../middleware/auth");
+const jwtValidate = require("../middleware/jwtValidate");
 const Joi = require("joi");
-const e = require("express");
 
 router.get("/", async (req, res, next) => {
   try {
