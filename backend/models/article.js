@@ -28,6 +28,10 @@ const articleSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  comment: {
+    type: Array,
+    default: []
+  }
 });
 
 const Article = mongoose.model("article", articleSchema);

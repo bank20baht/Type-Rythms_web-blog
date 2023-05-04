@@ -7,14 +7,14 @@ const auth = require("./routes/auth");
 const articles = require("./routes/articles");
 const cors = require("cors");
 const jwtValidate = require("./middleware/auth")
-
+const comment = require("./routes/comment")
 connection();
 app.use(cors());
 app.use(express.json());
 app.use("/api/register", register);
 app.use("/api/auth", auth);
 app.use("/api/articles", articles);
-
+//app.use("/api/articles/comment", comment)
 // test
 app.get("/welcome", jwtValidate, (req, res) => {
     const { user } = req;

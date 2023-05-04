@@ -94,4 +94,26 @@ router.delete("/delete/:id", async (req, res, next) => {
   }
 });
 
+router.post("/comment/:id", async (req, res) => {
+  try {
+      await Article.findByIdAndUpdate(req.params.id, {
+          $push: {
+              comment: {
+                  picture: req.body.picture,
+                  username: req.body.username,
+                  comment: req.body.comment
+              }
+          }
+      })
+      res.status(200).send({
+        status: "ok",
+        message: "Article is update",
+      }); 
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Server Error");
+  }
+})
+
+
 module.exports = router;
