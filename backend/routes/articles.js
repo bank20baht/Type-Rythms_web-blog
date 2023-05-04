@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const { Article, validate } = require("../models/article");
+const jwtValidate = require("../middleware/auth")
 
 router.get("/", async (req, res, next) => {
   try {
@@ -27,7 +28,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", jwtValidate, async (req, res, next) => {
   try {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -56,7 +57,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.put("/edit/:id", async (req, res, next) => {
+router.put("/edit/:id", jwtValidate, async (req, res, next) => {
   try {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -77,7 +78,7 @@ router.put("/edit/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/delete/:id", async (req, res, next) => {
+router.delete("/delete/:id", jwtValidate, async (req, res, next) => {
   try {
     const article = await Article.findByIdAndDelete(req.params.id);
     if (article) {
@@ -94,7 +95,7 @@ router.delete("/delete/:id", async (req, res, next) => {
   }
 });
 
-router.post("/comment/:id", async (req, res) => {
+router.post("/comment/:id", jwtValidate, async (req, res) => {
   try {
       await Article.findByIdAndUpdate(req.params.id, {
           $push: {
