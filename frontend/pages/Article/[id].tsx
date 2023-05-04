@@ -1,9 +1,10 @@
-import axios from "axios";
+import axios from "@/lib/axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Head from "next/head";
 import CommentComponent from "@/components/CommentComponent";
 import ReactMarkdown from "react-markdown";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import {
   VscEdit,
   VscClose,
@@ -29,18 +30,16 @@ export type ArticleData = {
   comment: CommentData[];
 };
 
-const apiURL = "http://localhost:5000/api/articles/";
+const apiURL = "/articles/";
 
 const Article = ({ article }: { article: ArticleData }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const { id } = router.query;
+  const axiosAuth = useAxiosAuth();
+  
   const deleteArticle = async () => {
-    await axios.delete(apiURL + "delete/" + article._id, {
-      headers: {
-        Authorization: `Bearer ${session?.user.accesstoken}`,
-      },
-    });
+    await axiosAuth.delete(apiURL + "delete/" + article._id);
     router.push("/");
   };
   const initalState = {

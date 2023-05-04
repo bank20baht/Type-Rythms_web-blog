@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/lib/axios";
 import CardArticle from "@/components/CardArticleComponent";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -80,7 +80,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   let totalPages = 0;
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/articles?page=${page}&limit=${limit}`
+      `/articles?page=${page}&limit=${limit}`
     );
     articles = response.data.results;
     totalPages = Math.ceil(response.data.count / limit);

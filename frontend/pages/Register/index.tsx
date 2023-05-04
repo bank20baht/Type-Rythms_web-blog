@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/lib/axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import router from "next/router";
 import { object, string } from "yup";
@@ -7,7 +7,7 @@ interface IProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-const apiURL = "http://localhost:5000/api/register";
+const apiURL = "/register";
 
 const RegisterPage = ({ searchParams }: IProps) => {
   const initialValues = {

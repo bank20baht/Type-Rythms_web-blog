@@ -1,17 +1,18 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import Head from "next/head";
 import { VscCheck } from "react-icons/vsc";
 import { object, string } from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-
-const apiURL = "http://localhost:5000/api/articles/";
+import axios from "@/lib/axios";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+const apiURL = "/articles/";
 
 const Write = () => {
   const { data: session } = useSession();
   const router = useRouter();
+  const axiosAuth = useAxiosAuth();
 
   const initialValues = {
     title: "",
@@ -20,7 +21,7 @@ const Write = () => {
 
   const onSubmit = async (values: any) => {
     try {
-      const response = await axios.post(apiURL, {
+      const response = await axiosAuth.post(apiURL, {
         title: values.title,
         content: values.content,
         user_email: session?.user?.email,

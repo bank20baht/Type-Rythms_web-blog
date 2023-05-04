@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { VscCheckAll } from "react-icons/vsc";
 import { object, string } from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useSession } from "next-auth/react";
-const apiURL = "http://localhost:5000/api/articles/";
+import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
+
+const apiURL = "/articles/";
 
 type Props = {
   articleData: {
@@ -23,20 +25,16 @@ const EditPage = ({ articleData }: Props) => {
     title: articleData.title,
     content: articleData.content,
   };
+  const axiosAuth = useAxiosAuth();
 
   const onSubmit = async (values: any) => {
     try {
-      const response = await axios.put(
-        `http://localhost:5000/api/articles/edit/${id}`,
+      const response = await axiosAuth.put(
+        `/articles/edit/${id}`,
         {
           title: values.title,
           content: values.content,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${session?.user?.accesstoken}`,
-          },
-        }
       );
       router.push(`/Article/${id}`);
     } catch (error) {

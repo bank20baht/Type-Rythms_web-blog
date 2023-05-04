@@ -5,7 +5,7 @@ function generateTokens(user) {
   const accessToken = jwt.sign(
     { user_id: _id, email },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "2m", algorithm: "HS256" }
+    { expiresIn: "10s", algorithm: "HS256" }
   );
   const refreshToken = jwt.sign(
     { user_id: _id, email },
