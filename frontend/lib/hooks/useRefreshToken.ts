@@ -2,27 +2,15 @@ import axios from "@/lib/axios";
 import { signIn, useSession } from "next-auth/react";
 
 export const useRefreshToken = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const refreshToken = async () => {
-    if (status !== "authenticated" || !session?.user?.refreshtoken) {
-      signIn();
-      return;
-    }
-
-    try {
-      const res = await axios.post("/auth/refresh", {
-        refreshtoken: session.user.refreshtoken,
-      });
-
-      if (session) {
-        session.user.accesstoken = res.data.accesstoken;
-      }
-    } catch (e) {
-      console.error("Error refreshing token:", e);
-      signIn();
-    }
+    const res = await axios.post("/auth/refresh", {
+      refreshtoken: session?.user.refreshtoken,
+    });
+    console.log(res)
+    if (session) session.user.accesstoken = res.data.accesstoken;
+    else signIn();
   };
-
   return refreshToken;
 };
