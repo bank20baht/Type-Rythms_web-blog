@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const { Article, validate } = require("../models/article");
-const jwtValidate = require("../middleware/auth")
+const jwtValidate = require("../middleware/auth");
+const Joi = require("joi");
+const e = require("express");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -57,20 +59,37 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+const updateSchema = Joi.object({
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+});
+
 router.put("/edit/:id", jwtValidate, async (req, res, next) => {
   try {
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-    const article = await Article.findByIdAndUpdate(req.params.id, {
-      $set: req.body,
-    });
-    if (article) {
-      res.status(200).send({
-        status: "ok",
-        message: "Article " + article.title + " is update",
+    //get email from accesstoken and get Article info to auth for delete
+    const { user } = req;
+    const verify_article = await Article.findById(req.params.id);
+    if (verify_article.user_email == user.email) {
+      const { error } = updateSchema.validate(req.body);
+      if (error) {
+        return res.status(400).send({ message: error.details[0].message });
+      }
+      const article = await Article.findByIdAndUpdate(req.params.id, {
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+        },
       });
+      if (article) {
+        res.status(200).send({
+          status: "ok",
+          message: "Article " + article.title + " is updated",
+        });
+      } else {
+        res.status(404).send({ message: "Article not found" });
+      }
     } else {
-      res.status(404).send({ message: "Article not found" });
+      res.status(401).send({ message: "Unauthorized" });
     }
   } catch (error) {
     console.error(error);
@@ -80,14 +99,20 @@ router.put("/edit/:id", jwtValidate, async (req, res, next) => {
 
 router.delete("/delete/:id", jwtValidate, async (req, res, next) => {
   try {
-    const article = await Article.findByIdAndDelete(req.params.id);
-    if (article) {
-      res.status(200).send({
-        status: "ok",
-        message: "Article " + article.title + " is deleted",
-      });
+    const { user } = req;
+    const verify_article = await Article.findById(req.params.id);
+    if (verify_article.user_email == user.email) {
+      const article = await Article.findByIdAndDelete(req.params.id);
+      if (article) {
+        res.status(200).send({
+          status: "ok",
+          message: "Article " + article.title + " is deleted",
+        });
+      } else {
+        res.status(404).send({ message: "Article not found" });
+      }
     } else {
-      res.status(404).send({ message: "Article not found" });
+      res.status(401).send({ message: "Unauthorized" });
     }
   } catch (error) {
     console.error(error);
@@ -97,24 +122,23 @@ router.delete("/delete/:id", jwtValidate, async (req, res, next) => {
 
 router.post("/comment/:id", jwtValidate, async (req, res) => {
   try {
-      await Article.findByIdAndUpdate(req.params.id, {
-          $push: {
-              comment: {
-                  picture: req.body.picture,
-                  username: req.body.username,
-                  comment: req.body.comment
-              }
-          }
-      })
-      res.status(200).send({
-        status: "ok",
-        message: "Article is update",
-      }); 
+    await Article.findByIdAndUpdate(req.params.id, {
+      $push: {
+        comment: {
+          picture: req.body.picture,
+          username: req.body.username,
+          comment: req.body.comment,
+        },
+      },
+    });
+    res.status(200).send({
+      status: "ok",
+      message: "Article is update",
+    });
   } catch (error) {
-      console.error(error);
-      res.status(500).send("Server Error");
+    console.error(error);
+    res.status(500).send("Server Error");
   }
-})
-
+});
 
 module.exports = router;

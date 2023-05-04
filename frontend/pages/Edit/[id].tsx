@@ -15,11 +15,10 @@ type Props = {
   };
 };
 
-
 const EditPage = ({ articleData }: Props) => {
   const { data: session } = useSession();
   const router = useRouter();
-  const { id } = router.query
+  const { id } = router.query;
   const initialValues = {
     title: articleData.title,
     content: articleData.content,
@@ -28,15 +27,18 @@ const EditPage = ({ articleData }: Props) => {
   const onSubmit = async (values: any) => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/articles/edit/" + id, 
-      {
-        title: values.title,
-        content: values.content,
-        user_email: session?.user?.email,
-        user_name: session?.user?.name,
-        user_img: session?.user?.image,
-      });
-      router.push("/Article/" + id);
+        `http://localhost:5000/api/articles/edit/${id}`,
+        {
+          title: values.title,
+          content: values.content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user?.accesstoken}`,
+          },
+        }
+      );
+      router.push(`/Article/${id}`);
     } catch (error) {
       console.error(error);
     }
@@ -98,7 +100,7 @@ const EditPage = ({ articleData }: Props) => {
               <div className="flex justify-end p-2 m-2 max-w-[120rem] w-full mx-auto">
                 <button className="buttom-primary flex" type="submit">
                   Update
-                  <VscCheckAll/>
+                  <VscCheckAll />
                 </button>
               </div>
             </Form>

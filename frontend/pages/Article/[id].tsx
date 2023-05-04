@@ -36,7 +36,11 @@ const Article = ({ article }: { article: ArticleData }) => {
   const router = useRouter();
   const { id } = router.query;
   const deleteArticle = async () => {
-    await axios.delete(apiURL + "delete/" + article._id);
+    await axios.delete(apiURL + "delete/" + article._id, {
+      headers: {
+        Authorization: `Bearer ${session?.user.accesstoken}`,
+      },
+    });
     router.push("/");
   };
   const initalState = {
