@@ -2,6 +2,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import { User } from "next-auth";
+import { decode } from "next-auth/jwt";
+const jwt = require("jsonwebtoken");
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -18,7 +20,6 @@ export const authOptions: NextAuthOptions = {
         email: {
           label: "Email",
           type: "text",
-
         },
         password: {
           label: "Password",
@@ -27,24 +28,54 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         const { email, password } = credentials as any;
-        const res = await fetch("http://localhost:5000/api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        });
+        try {
+          const res = await fetch("http://localhost:5000/api/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              password,
+            }),
+          });
 
-        const user = await res.json();
+          const tokens = await res.json();
 
-        console.log({ user });
+          console.log({ tokens });
 
-        if (res.ok && user) {
-          return user;
-        } else return null;
+          if (res.ok && tokens) {
+            const { accesstoken, refreshtoken } = tokens;
+            let decodedAccessToken;
+
+            const token = accesstoken;
+            jwt.verify(
+              token,
+              "EiKf9vBVMW0Qiu6EWgzwU7PyCdD0BLxv7ks4kTe4fXvGPDYsS3QT3wugV4ReGopt",
+              (err: any, decoded: any) => {
+                if (err) {
+                  throw new Error(err);
+                } else {
+                  console.log(
+                    `User ${decoded?.name} with email ${decoded?.email} has logged in.`
+                  );
+                  decodedAccessToken = decoded;
+                }
+              }
+            );
+            return {
+              name: decodedAccessToken?.name,
+              email: decodedAccessToken?.email,
+              image: decodedAccessToken?.image,
+              accessToken: accesstoken,
+              refreshToken: refreshtoken,
+            };
+          } else {
+            throw new Error("Failed to log in with the given credentials.");
+          }
+        } catch (error) {
+          throw new Error(error);
+        }
       },
     }),
   ],

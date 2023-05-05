@@ -18,10 +18,6 @@ router.post("/login", async (req, res) => {
         const tokens = generateTokens(user);
         await user.save();
         return res.status(200).json({
-            name: user.name,
-            email: user.email,
-            password: user.password,
-            image: user.image,
             accesstoken: tokens.accessToken,
             refreshtoken: tokens.refreshToken
         });
