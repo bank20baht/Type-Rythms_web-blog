@@ -7,7 +7,7 @@ interface IProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-const apiURL = "/register";
+const apiURL = "/auth/register";
 
 const RegisterPage = ({ searchParams }: IProps) => {
   const initialValues = {
