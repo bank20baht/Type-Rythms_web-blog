@@ -6,7 +6,7 @@ const auth = require("./routes/auth");
 const articles = require("./routes/articles");
 const cors = require("cors");
 const jwtValidate = require("./middleware/jwtValidate")
-
+const compression = require("compression");
 connection();
 app.use(cors());
 app.use(
