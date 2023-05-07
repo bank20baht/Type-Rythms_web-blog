@@ -9,6 +9,12 @@ const jwtValidate = require("./middleware/jwtValidate")
 
 connection();
 app.use(cors());
+app.use(
+  compression({
+    filter: shouldCompress,
+    threshold: 0,
+  })
+);
 app.use(express.json());
 app.use("/api/auth", auth);
 app.use("/api/articles", articles);

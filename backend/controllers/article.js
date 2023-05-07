@@ -1,4 +1,3 @@
-const express = require("express");
 const { Article, validate } = require("../models/article");
 const Joi = require("joi");
 
