@@ -136,6 +136,29 @@ const commentArticle = async (req, res) => {
   }
 };
 
+const getAllByUser = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const count = await Article.countDocuments();
+    const articles = await Article.find({ user_name: req.params.id })
+      .skip((page - 1) * limit)
+      .limit(limit);
+    if (articles.length > 0) {
+      res.status(200).json({
+        results: articles,
+        count: count,
+        totalPage: Math.ceil(count / limit),
+        currentPage: page,
+      });
+    } else {
+      res.status(404).send({ message: "No article in database" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+};
 
 module.exports = {
   getAllArticle,
@@ -144,4 +167,5 @@ module.exports = {
   commentArticle,
   updateArticle,
   getArticleByID,
+  getAllByUser
 };

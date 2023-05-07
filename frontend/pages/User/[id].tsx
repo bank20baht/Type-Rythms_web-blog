@@ -13,13 +13,20 @@ export type ArticleData = {
   user_email: string
 }
 
+export type userData = {
+  name: string;
+  email: string;
+  image: string;
+}
+
 interface Props {
   articles: ArticleData[];
   currentPage: number;
   totalPages: number;
+  user: userData;
 }
 
-export default function User({ articles, currentPage, totalPages }: Props) {
+export default function User({ articles, currentPage, totalPages, user }: Props) {
   const router = useRouter();
   const { id } = router.query
   const { data: session } = useSession()
@@ -48,11 +55,11 @@ export default function User({ articles, currentPage, totalPages }: Props) {
       <div className="max-w-[120rem] w-full mx-auto sm:items-center m-3 flex flex-col justify-center">
           <img
             className="rounded-full w-20 h-20 m-1"
-            src={session?.user?.image as string}
+            src={user?.image as string}
             alt="u_img"
           />
-          <div className="">{session?.user?.name}</div>
-          <div>{session?.user?.email}</div>
+          <div className="">{user?.name}</div>
+          <div>{user?.email}</div>
         </div>
         {articles && articles.length > 0 ? (
           articles
@@ -90,18 +97,23 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id } = query
   const page = query.page ? Number(query.page) : 1;
   const limit = 5;
-  let articles
-  let totalPages
+  let articles = null
+  let totalPages = 0
+  let user = null
   try {
-    const response = await axios.get(
-    `http://localhost:5000/api/user/${id}?page=${page}&limit=${limit}`
+    const articlebyuser = await axios.get(
+    `http://localhost:5000/api/articles/user/${id}?page=${page}&limit=${limit}`
     );
-    articles = response.data.results;
-    totalPages = Math.ceil(response.data.count / limit);
+    articles = articlebyuser.data.results;
+    totalPages = Math.ceil(articlebyuser.data.count / limit);
+    const userinfomation = await axios.get(
+      `http://localhost:5000/api/user/${id}`
+    )
+    user = userinfomation.data
   } catch (error) {
     console.error(error)
   }
 
 
-  return { props: { articles, currentPage: page, totalPages } };
+  return { props: { articles, currentPage: page, totalPages, user } };
 };
