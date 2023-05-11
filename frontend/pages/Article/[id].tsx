@@ -53,7 +53,7 @@ const Article = ({ article }: { article: ArticleData }) => {
   };
 
   function postComment() {
-    axios
+    axiosAuth
       .post(apiURL + "comment/" + id, {
         picture: session?.user?.image,
         username: session?.user?.name,
