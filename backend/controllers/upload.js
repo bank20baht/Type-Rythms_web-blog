@@ -7,10 +7,11 @@ const upload_img = async (req, res) => {
   }
 
 const updateAvatar = async (req, res) => {
+    const name = req.params.id
     const { filename } = req.file
-    const user = await User.find({ name: req.params.id}).updateOne({
+    const user = await User.find({ name: name}).updateOne({
         $set: {
-            image: "http://localhost:8000/images//" + filename,
+            image: "http://localhost:5000/images/" + filename,
         }
     })
 }

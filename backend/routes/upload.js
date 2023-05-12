@@ -15,5 +15,6 @@ const storage = multer.diskStorage({
   const upload = multer({ storage })
   
 router.post("/upload",upload.single('photo'), upload_img)
+router.put("/changeAvatar/:id",upload.single('photo'), updateAvatar)
 
 module.exports = router

@@ -4,6 +4,7 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react"
+import { useState } from "react";
 export type ArticleData = {
   _id: string;
   title: string;
@@ -38,6 +39,36 @@ export default function User({ articles, currentPage, totalPages, user }: Props)
     window.location.href = `/?page=${currentPage - 1}`;
   };
 
+  const [file, setFile] = useState('');
+  const [fileName, setFileName] = useState('');
+
+  const handleFileChange = (e: any) => {
+    if (e.target.files.length) {
+      setFile(e.target.files[0]);
+      setFileName(e.target.files[0].name);
+    }
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('photo', file, fileName);
+
+    try {
+      const res = await axios.put('http://localhost:5000/api/upload/changeAvatar/'+ id, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(res)
+      setFile('');
+      setFileName('');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="contaniner">
       <Head>
@@ -58,6 +89,11 @@ export default function User({ articles, currentPage, totalPages, user }: Props)
             src={user?.image as string}
             alt="u_img"
           />
+              <form onSubmit={handleSubmit}>
+      <input type="file" onChange={handleFileChange} />
+      <button type="submit">Upload</button>
+      {fileName && <p>Selected file: {fileName}</p>}
+    </form>
           <div className="">{user?.name}</div>
           <div>{user?.email}</div>
         </div>
