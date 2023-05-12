@@ -1,22 +1,44 @@
-import axios from "axios";
-import { useSession } from "next-auth/react";
-import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
-export default function Welcome() {
-  const { data: session } = useSession();
-  const axiosAuth = useAxiosAuth();
-  const handleClick = async () => {
+import axios from 'axios';
+import { useState } from 'react';
+
+function FileUploadForm() {
+  const [file, setFile] = useState('');
+  const [fileName, setFileName] = useState('');
+
+  const handleFileChange = (e: any) => {
+    if (e.target.files.length) {
+      setFile(e.target.files[0]);
+      setFileName(e.target.files[0].name);
+    }
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('photo', file, fileName);
+
     try {
-      const response = await axiosAuth.get("http://localhost:5000/welcome");
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
+      const res = await axios.post('http://localhost:5000/api/upload/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(res)
+      setFile('');
+      setFileName('');
+    } catch (err) {
+      console.log(err);
     }
   };
 
   return (
-    <div>
-      <h1>Welcome Page</h1>
-      <button onClick={handleClick}>Get Welcome</button>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input type="file" onChange={handleFileChange} />
+      <button type="submit">Upload</button>
+      {fileName && <p>Selected file: {fileName}</p>}
+    </form>
   );
 }
+
+export default FileUploadForm;

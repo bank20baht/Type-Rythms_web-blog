@@ -6,6 +6,7 @@ const app = express();
 const auth = require("./routes/auth");
 const articles = require("./routes/articles");
 const user = require("./routes/user")
+const upload = require("./routes/upload")
 const cors = require("cors");
 const compression = require("compression");
 const fs = require("fs");
@@ -35,10 +36,11 @@ const accessLogStream = fs.createWriteStream(
 );
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'images')));
 app.use("/api/auth", auth);
 app.use("/api/articles", articles);
 app.use("/api/user", user)
-
+app.use("/api/upload", upload)
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
