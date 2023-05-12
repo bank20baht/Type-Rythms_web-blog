@@ -20,6 +20,7 @@ Readme blog Web application create by next.js mongodb node.js express to learnin
 - mongoose
 - morgan 
 - nodemon
+- multer
 
 
 # Knowledge learned from this project
@@ -30,6 +31,7 @@ Readme blog Web application create by next.js mongodb node.js express to learnin
 - how to validate data in frontend(yup + formik) and backend (joi)
 - how to create credential login and register
 - lerning layout in react
+- how to create upload file from client to server using multer
 
 # Examples of pages in this project
 - login / register page
