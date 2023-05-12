@@ -33,11 +33,15 @@ function FileUploadForm() {
   };
 
   return (
+    <div className='flex flex-col'>
     <form onSubmit={handleSubmit}>
       <input type="file" onChange={handleFileChange} />
       <button type="submit">Upload</button>
       {fileName && <p>Selected file: {fileName}</p>}
     </form>
+    <img className='avatar-img' src='http://localhost:5000/images/default-avatar-img.png'></img>
+    </div>
+
   );
 }
 

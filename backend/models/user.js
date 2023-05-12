@@ -19,8 +19,7 @@ const userSchema = new Schema({
     },
     image: {
         type: String,
-        default:
-            "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1143&q=80",
+        default: "http://localhost:5000/images/default-avatar-img.png",
     }, 
     refreshtoken: {
         type: String,

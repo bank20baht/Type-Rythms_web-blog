@@ -36,7 +36,7 @@ const accessLogStream = fs.createWriteStream(
 );
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'images')));
+app.use("/images", express.static(path.join(__dirname, 'images')));
 app.use("/api/auth", auth);
 app.use("/api/articles", articles);
 app.use("/api/user", user)
